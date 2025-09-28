@@ -64,7 +64,7 @@
   <FILTER uid="5" x="0.44" y="0.4677419354838709" useARA="0">
     <PLUGIN name="SimpleMBComp" format="VST3" category="Fx" manufacturer="SNWBLND Music"
             version="1.0.0" file="C:\Program Files\Common Files\VST3\SimpleMBComp.vst3\Contents\x86_64-win\SimpleMBComp.vst3"
-            uniqueId="764e522" isInstrument="0" fileTime="1998c2fba9d" infoUpdateTime="1998c36ed81"
+            uniqueId="764e522" isInstrument="0" fileTime="1998c2fba9d" infoUpdateTime="1998c914cfb"
             numInputs="2" numOutputs="2" isShell="0" hasARAExtension="0"
             uid="e95c24f5"/>
     <STATE>191.VMjLgXK....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9XCLt3hKt3hKt3hKt3hYRUUSTEETIckVwTjQisVTTgkdEYjKAQjYPQSPWgUdMcjKAQjct3hdA4hKt3hKt3hKtnTUv.UQAslXuk0UXoWUFE0YQcEV77RRC8Vav8lak4Fc9vyKVMEUy.Ea0cVZtMEcgQWY9..</STATE>
@@ -77,6 +77,25 @@
       </OUTPUTS>
     </LAYOUT>
   </FILTER>
+  <FILTER uid="6" x="0.49625" y="0.3004032258064516" useARA="0" uiLastX_Normal="26"
+          uiLastY_Normal="224" uiopen_Normal="0">
+    <PLUGIN name="AudioFilePlayer" format="VST3" category="Fx" manufacturer="Matkat Music LLC"
+            version="1.0.0" file="C:\Users\ajald\Programming\AudioFilePlayer\Builds\VisualStudio2022\x64\Debug\VST3\AudioFilePlayer.vst3\Contents\x86_64-win\AudioFilePlayer.vst3"
+            uniqueId="79fe81c" isInstrument="0" fileTime="1998c8631ac" infoUpdateTime="1998c914cfb"
+            numInputs="2" numOutputs="2" isShell="0" hasARAExtension="0"
+            uid="e95d02c7"/>
+    <STATE>191.VMjLgXK....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9XCLt3hKt3hKt3hKt3hYRUUSTEETIckVwTjQisVTTgkdEYjKAQjYPQSPWgUdMcjKAQjct3hdA4hKt3hKt3hKtnTUv.UQAslXuk0UXoWUFE0YQcEV77RRC8Vav8lak4Fc9vyKVMEUy.Ea0cVZtMEcgQWY9..</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="L R"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
   <CONNECTION srcFilter="5" srcChannel="0" dstFilter="3" dstChannel="0"/>
   <CONNECTION srcFilter="5" srcChannel="1" dstFilter="3" dstChannel="1"/>
+  <CONNECTION srcFilter="6" srcChannel="0" dstFilter="5" dstChannel="0"/>
+  <CONNECTION srcFilter="6" srcChannel="1" dstFilter="5" dstChannel="1"/>
 </FILTERGRAPH>

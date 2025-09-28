@@ -166,7 +166,8 @@ bool SimpleMBCompAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* SimpleMBCompAudioProcessor::createEditor()
 {
-    return new SimpleMBCompAudioProcessorEditor (*this);
+    //return new SimpleMBCompAudioProcessorEditor (*this);
+    return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
@@ -181,6 +182,44 @@ void SimpleMBCompAudioProcessor::setStateInformation (const void* data, int size
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+}
+
+
+juce::AudioProcessorValueTreeState::ParameterLayout SimpleMBCompAudioProcessor::createParameterLayout() {
+    APVTS::ParameterLayout layout;
+
+    using namespace juce;
+
+    //here we add all the parameters:
+        
+        //threshold
+        layout.add(std::make_unique<AudioParameterFloat>("Threshold", "Threshold",
+            NormalisableRange<float>(-60, -12, 1, 1), 0));
+
+        //range of attack/release: 5-500 ms
+        auto attackReleaseRange = NormalisableRange<float>(5, 500, 1, 1);
+
+        //attack
+        layout.add(std::make_unique<AudioParameterFloat>("Attack", "Attack", 
+                                                             attackReleaseRange, 50));
+
+        //release
+        layout.add(std::make_unique<AudioParameterFloat>("Release", "Release",
+                                                            attackReleaseRange, 250));
+
+        //ratio options
+        auto choices = std::vector<double>{ 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 10, 15, 20, 50, 100 };
+
+        //convert to String array
+        juce::StringArray sa;
+        for (auto choice : choices) {
+            sa.add(juce::String(choice, 1));
+        }
+
+        //pass sa to ratio parameter constructor
+        layout.add(std::make_unique<AudioParameterChoice>("Ratio", "Ratio", sa, 3));
+
+    return layout;
 }
 
 //==============================================================================
