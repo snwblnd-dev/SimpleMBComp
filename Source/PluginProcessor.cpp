@@ -46,6 +46,8 @@ SimpleMBCompAudioProcessor::SimpleMBCompAudioProcessor()
     LP.setType(juce::dsp::LinkwitzRileyFilterType::lowpass);
     HP.setType(juce::dsp::LinkwitzRileyFilterType::highpass);
 
+    AP.setType(juce::dsp::LinkwitzRileyFilterType::allpass);
+
     floatHelper(compressor.attack, Names::Attack_Low_Band);
     floatHelper(compressor.release, Names::Release_Low_Band);
     floatHelper(compressor.threshold, Names::Threshold_Low_Band);
@@ -140,6 +142,9 @@ void SimpleMBCompAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 
     LP.prepare(spec);
     HP.prepare(spec);
+
+    AP.prepare(spec);
+    apBuffer.setSize(spec.numChannels, samplesPerBlock);
     
     for (auto& buffer : filterBuffers) {
         buffer.setSize(spec.numChannels, samplesPerBlock);
@@ -184,29 +189,11 @@ void SimpleMBCompAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
   
-
-
-
-   // context.isBypassed = bypassed->get();
-
-   // compressor.process(context);
-
-        // ..do something to the data...
-    //compressor.updateCompressorSettings();
-   // compressor.process(buffer);
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; i++) {
-        buffer.clear(i, 0, buffer.getNumSamples());
-    }
+    
 
     for (auto& fb : filterBuffers) {
         fb = buffer;
@@ -229,6 +216,15 @@ void SimpleMBCompAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     auto numSamples = buffer.getNumSamples();
     auto numChannels = buffer.getNumChannels();
 
+    /*if (compressor.bypassed->get()) {
+        return;
+    }*/
+
+    apBuffer = buffer;
+    auto apBlock = juce::dsp::AudioBlock<float>(apBuffer);
+    auto apContext = juce::dsp::ProcessContextReplacing<float>(apBlock);
+    AP.process(apContext);
+
     buffer.clear();
 
     auto addFilterBand = [nc = numChannels, ns = numSamples](auto& inputBuffer, const auto& source) {
@@ -238,8 +234,16 @@ void SimpleMBCompAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             }
         };
 
-    addFilterBand(buffer, filterBuffers[0]);
-    addFilterBand(buffer, filterBuffers[1]); 
+    if (!compressor.bypassed->get()) {
+        addFilterBand(buffer, filterBuffers[0]);
+        addFilterBand(buffer, filterBuffers[1]);
+    }
+    else {
+        addFilterBand(buffer, apBuffer);
+    }
+
+    
+
 }
 
 //==============================================================================
